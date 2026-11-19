@@ -1,0 +1,38 @@
+name: Build AP Mouth DeClick
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: Windows
+          - os: macos-latest
+            name: macOS
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Upload VST3
+        uses: actions/upload-artifact@v4
+        with:
+          name: AP-Mouth-DeClick-VST3-${{ matrix.name }}
+          path: build/APMouthDeClick_artefacts/Release/VST3/
+
+      - name: Upload AU (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AP-Mouth-DeClick-AU-macOS
+          path: build/APMouthDeClick_artefacts/Release/AU/
