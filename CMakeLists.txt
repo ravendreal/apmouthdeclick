@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "")
 
-# JUCE: uses a local copy if you pass -DJUCE_DIR=/path/to/JUCE, otherwise downloads it.
 if(DEFINED JUCE_DIR)
     add_subdirectory(${JUCE_DIR} JUCE)
 else()
@@ -34,8 +33,8 @@ juce_add_plugin(APMouthDeClick
     AU_MAIN_TYPE kAudioUnitType_Effect)
 
 target_sources(APMouthDeClick PRIVATE
-    Source/PluginProcessor.cpp
-    Source/PluginEditor.cpp)
+    PluginProcessor.cpp
+    PluginEditor.cpp)
 
 target_compile_definitions(APMouthDeClick PUBLIC
     JUCE_WEB_BROWSER=0
@@ -43,7 +42,6 @@ target_compile_definitions(APMouthDeClick PUBLIC
     JUCE_VST3_CAN_REPLACE_VST2=0
     JUCE_DISPLAY_SPLASH_SCREEN=0)
 
-# Turkish characters in the source are UTF-8
 target_compile_options(APMouthDeClick PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
 
 target_link_libraries(APMouthDeClick
